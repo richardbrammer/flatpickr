@@ -96,6 +96,11 @@ function monthSelectPlugin(pluginConfig?: Partial<Config>): Plugin {
         currentlySelected[index].classList.remove("selected");
       }
 
+      // do not select a month, if the selected Date is not in the currentYear
+      if (fp.selectedDates[0] && fp.selectedDates[0].getFullYear() !== fp.currentYear) {
+        return;
+      }
+
       const month = fp.rContainer.querySelector(
         `.flatpickr-monthSelect-month:nth-child(${fp.currentMonth + 1})`
       );
