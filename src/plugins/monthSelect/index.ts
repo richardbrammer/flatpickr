@@ -9,10 +9,6 @@ export interface Config {
   theme: string;
 }
 
-export interface ElementDate extends Element {
-  dateObj: Date;
-}
-
 export type MonthElement = HTMLSpanElement & { dateObj: Date; $i: number };
 
 const defaultConfig: Config = {
@@ -124,18 +120,17 @@ function monthSelectPlugin(pluginConfig?: Partial<Config>): Plugin {
         fp.currentYearElement.value = String(fp.currentYear);
         setCurrentlySelected();
       }
-      if (fp.rContainer) {
-        const months: NodeListOf<ElementDate> = fp.rContainer.querySelectorAll(".flatpickr-monthSelect-month");
-        months.forEach(month => {
-          month.dateObj.setFullYear(fp.currentYear);
-          if ((fp.config.minDate && month.dateObj < fp.config.minDate) || (fp.config.maxDate && month.dateObj > fp.config.maxDate)) {
-            month.classList.add("disabled");
-          } else {
-            month.classList.remove("disabled");
-          }
-        });
-      }
-      
+      if (!fp.rContainer) return;
+
+      const months: NodeListOf<MonthElement> = fp.rContainer.querySelectorAll(".flatpickr-monthSelect-month");
+      months.forEach(month => {
+        month.dateObj.setFullYear(fp.currentYear);
+        month.classList.remove("disabled");
+        if ((fp.config.minDate && month.dateObj < fp.config.minDate) || (fp.config.maxDate && month.dateObj > fp.config.maxDate)) {
+          month.classList.add("disabled");
+        }
+      });
+       
     }
 
     function selectMonth(e: Event) {
